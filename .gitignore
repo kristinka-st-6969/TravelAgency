@@ -1,0 +1,7 @@
+*.json
+/back/node_modules
+/front/node_modules
+*.node_modules
+*.ini
+/back/utils
+/back/uploads
