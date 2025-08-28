@@ -25,6 +25,7 @@ app.use('/api/tours', tourRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/destinations', require('./routes/destinations'));
 
 // Обработка ошибок
 app.use((err, req, res, next) => {

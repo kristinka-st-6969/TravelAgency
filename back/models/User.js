@@ -28,10 +28,10 @@ const User = sequelize.define('User', {
     type: DataTypes.ENUM('user', 'admin'),
     defaultValue: 'user'
   },
-  // avatar: {
-  //   type: DataTypes.STRING,
-  //   allowNull: true
-  // }, 
+  avatar: {
+    type: DataTypes.STRING,
+    allowNull: true
+  }, 
   isBlocked: {
   type: DataTypes.BOOLEAN,
   defaultValue: false

@@ -1,42 +1,123 @@
-.container {
-  max-width: 1200px;
-  margin: 40px auto;
-  padding: 0 20px;
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
+.tours-page {
+  max-width: 1320px;
+  margin: 40px auto;
+  padding: 0 20px;
+  font-family: 'Source Sans 3', sans-serif;
+  color: #333;
+}
+
+/* ===== HERO TOURS ===== */
+.tours-hero {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.tours-hero h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: #1976d2;
+  margin-bottom: 15px;
+}
+
+.tours-hero p {
+  font-size: 1.2rem;
+  color: #555;
+}
+
+/* ===== SEARCH + SORT ===== */
 .search-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 40px;
 }
 
 .search-input-wrapper {
-  position: relative;
-  width: 100%;
-}
-
-.search-icon {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
+  flex: 1;
 }
 
 .search-input {
   width: 100%;
-  padding: 10px 10px 10px 35px;
+  padding: 12px 16px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 50px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
 }
 
-.title-tours {
-  margin-top: 20px;
+.search-input:focus {
+  border-color: #1976d2;
+  box-shadow: 0px 4px 10px rgba(25, 118, 210, 0.2);
+  outline: none;
+}
+
+/* Sort button */
+.sort-container {
+  position: relative;
+}
+
+.sort-button {
+  padding: 12px 20px;
+  border-radius: 50px;
+  border: 1px solid #1976d2;
+  background: white;
   color: #1976d2;
-  font-size: 24px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
+.sort-button:hover {
+  background: #1976d2;
+  color: white;
+}
+
+.sort-menu {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  z-index: 10;
+}
+
+.sort-menu button {
+  display: block;
+  width: 100%;
+  padding: 12px 18px;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s ease;
+}
+
+.sort-menu button:hover {
+  background: #e3f2fd;
+}
+
+/* ===== GRID ===== */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 24px;
+  gap: 28px;
 }
 
 .grid-item {
@@ -46,71 +127,84 @@
 
 .card {
   width: 100%;
-  max-width: 300px;
-  height: 500px;
+  max-width: 320px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.05);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   cursor: pointer;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  overflow: hidden;
-  transition: transform 0.2s ease-in-out;
-  background: #fff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card:hover {
-  transform: scale(1.02);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 22px rgba(0,0,0,0.1);
 }
 
 .card-image {
   width: 100%;
-  height: 290px;
+  height: 240px;
   object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.card:hover .card-image {
+  transform: scale(1.05);
 }
 
 .card-content {
   flex-grow: 1;
-  padding: 16px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
 }
 
+.card-content h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
 .description {
-  color: #666;
+  color: #555;
   flex-grow: 1;
-  margin: 8px 0;
+  margin-bottom: 15px;
+  font-size: 1.1rem;
 }
 
 .price {
   color: #1976d2;
-  font-size: 18px;
+  font-size: 1.3rem;
+  font-weight: 600;
   margin-bottom: 8px;
 }
 
 .duration {
-  color: #999;
+  color: #777;
   margin-bottom: 16px;
 }
 
 .details-button {
-  padding: 10px;
+  padding: 12px;
   background-color: #1976d2;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 50px;
   cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
 
 .details-button:hover {
   background-color: #1565c0;
+  transform: translateY(-2px);
 }
 
-.no-tours {
-  text-align: center;
-  margin-top: 40px;
-  font-size: 18px;
-}
-
+/* ===== Pagination ===== */
 .pagination {
   display: flex;
   justify-content: center;
@@ -118,25 +212,27 @@
 }
 
 .page-button {
-  margin: 0 4px;
-  padding: 8px 12px;
-  border: 1px solid #ccc;
+  margin: 0 6px;
+  padding: 10px 16px;
+  border: 1px solid #1976d2;
   background: #fff;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: 50px;
   color: #1976d2;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
 
 .page-button.active {
   background-color: #1976d2;
   color: white;
-  border-color: #1976d2;
 }
 
 .page-button:hover {
   background-color: #e3f2fd;
 }
 
+/* Loader */
 .loader-container {
   display: flex;
   justify-content: center;
@@ -159,74 +255,22 @@
   }
 }
 
-
-@media (min-width: 1400px) {
-  .container {
-    max-width: 1320px;
-  }
-}
-
-@media (min-width: 1200px) and (max-width: 1399.98px) {
-  .container {
-    max-width: 1140px;
-  }
-}
-
-@media (min-width: 992px) and (max-width: 1199.98px) {
-  .container {
-    max-width: 960px;
-  }
-}
-
-@media (min-width: 768px) and (max-width: 991.98px) {
-  .container {
-    max-width: 720px;
-  }
-  .card {
-    height: 450px;
-  }
-  .card-image {
-    height: 250px;
-  }
-}
-
-@media (min-width: 576px) and (max-width: 767.98px) {
-  .container {
-    max-width: 540px;
-  }
-  .card {
-    height: 420px;
-  }
-  .card-image {
-    height: 220px;
-  }
-}
-
+/* Responsive */
 @media (max-width: 575.98px) {
-  .container {
-    padding: 0 10px;
-  }
-  .title-tours {
-    font-size: 20px;
-  }
   .card {
-    height: auto;
     max-width: 100%;
   }
   .card-image {
     height: 200px;
   }
   .description {
-    font-size: 14px;
+    font-size: 0.95rem;
   }
   .price {
-    font-size: 16px;
-  }
-  .duration {
-    font-size: 14px;
+    font-size: 1.1rem;
   }
   .details-button {
-    padding: 8px;
-    font-size: 14px;
+    font-size: 1rem;
+    padding: 10px;
   }
 }

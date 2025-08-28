@@ -1,277 +1,6 @@
-// import React, { useState, useEffect } from 'react';
-// import { useParams, useNavigate } from 'react-router-dom';
-// import {
-//   Container,
-//   Grid,
-//   Typography,
-//   Button,
-//   Box,
-//   Paper,
-//   ImageList,
-//   ImageListItem,
-//   Dialog,
-//   DialogContent,
-//   CircularProgress,
-//   TextField,
-//   Alert
-// } from '@mui/material';
-// import { motion } from 'framer-motion';
-// import { useSelector } from 'react-redux';
-// import axios from 'axios';
-
-// const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-
-// const TourDetails = () => {
-//   const { id } = useParams();
-//   const navigate = useNavigate();
-//   const { isAuthenticated } = useSelector((state) => state.auth);
-//   const [tour, setTour] = useState(null);
-//   const [loading, setLoading] = useState(true);
-//   const [selectedImage, setSelectedImage] = useState(null);
-//   const [bookingData, setBookingData] = useState({
-//     numberOfPeople: 1,
-//     specialRequests: ''
-//   });
-//   const [error, setError] = useState(null);
-//   const [success, setSuccess] = useState(false);
-
-//   useEffect(() => {
-//     fetchTourDetails();
-//   }, [id]);
-
-//   const fetchTourDetails = async () => {
-//     try {
-//       setLoading(true);
-//       const response = await axios.get(`${API_URL}/tours/${id}`);
-//       setTour(response.data);
-//     } catch (error) {
-//       console.error('Ошибка при загрузке деталей тура:', error);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   const handleImageClick = (image) => {
-//     setSelectedImage(image);
-//   };
-
-//   const handleCloseImage = () => {
-//     setSelectedImage(null);
-//   };
-
-//   const handleBookingChange = (e) => {
-//     setBookingData({
-//       ...bookingData,
-//       [e.target.name]: e.target.value
-//     });
-//   };
-
-//   const handleBookingSubmit = async (e) => {
-//     e.preventDefault();
-//     if (!isAuthenticated) {
-//       navigate('/login');
-//       return;
-//     }
-
-//     try {
-//       const token = localStorage.getItem('token');
-//       await axios.post(
-//         `${API_URL}/bookings`,
-//         {
-//           tourId: id,
-//           ...bookingData
-//         },
-//         {
-//           headers: { Authorization: `Bearer ${token}` }
-//         }
-//       );
-//       setSuccess(true);
-//       setError(null);
-//       setBookingData({
-//         numberOfPeople: 1,
-//         specialRequests: ''
-//       });
-//     } catch (error) {
-//       setError(error.response?.data?.message || 'Ошибка при бронировании');
-//       setSuccess(false);
-//     }
-//   };
-
-//   if (loading) {
-//     return (
-//       <Box
-//         display="flex"
-//         justifyContent="center"
-//         alignItems="center"
-//         minHeight="60vh"
-//       >
-//         <CircularProgress />
-//       </Box>
-//     );
-//   }
-
-//   if (!tour) {
-//     return (
-//       <Container>
-//         <Typography variant="h5" color="error">
-//           Тур не найден
-//         </Typography>
-//       </Container>
-//     );
-//   }
-
-//   return (
-//     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-//       <motion.div
-//         initial={{ opacity: 0 }}
-//         animate={{ opacity: 1 }}
-//         transition={{ duration: 0.5 }}
-//       >
-//         <Grid container spacing={4}>
-//           <Grid item xs={12} md={8}>
-//             <Typography variant="h4" gutterBottom>
-//               {tour.title}
-//             </Typography>
-//             <Typography variant="body1" paragraph>
-//               {tour.description}
-//             </Typography>
-
-//             <ImageList cols={3} rowHeight={200} sx={{ mb: 4 }}>
-//               {tour.images?.map((image, index) => (
-//                 <ImageListItem
-//                   key={index}
-//                   sx={{ cursor: 'pointer' }}
-//                   onClick={() => handleImageClick(image)}
-//                 >
-//                   <img
-//                     src={`http://localhost:5000${image}`}
-//                     alt={`${tour.title} - фото ${index + 1}`}
-//                     loading="lazy"
-//                   />
-//                 </ImageListItem>
-//               ))}
-//             </ImageList>
-
-//             <Dialog
-//               open={!!selectedImage}
-//               onClose={handleCloseImage}
-//               maxWidth="lg"
-//             >
-//               <DialogContent>
-//                 <img
-//                   src={selectedImage}
-//                   alt="Увеличенное фото"
-//                   style={{ width: '100%', height: 'auto' }}
-//                 />
-//               </DialogContent>
-//             </Dialog>
-
-//             <Typography variant="h6" gutterBottom>
-//               Детали тура:
-//             </Typography>
-//             <Grid container spacing={2}>
-//               <Grid item xs={6}>
-//                 <Typography variant="body1">
-//                   <strong>Длительность:</strong> {tour.duration} дней
-//                 </Typography>
-//               </Grid>
-//               <Grid item xs={6}>
-//                 <Typography variant="body1">
-//                   <strong>Направление:</strong> {tour.destination}
-//                 </Typography>
-//               </Grid>
-//               <Grid item xs={6}>
-//                 <Typography variant="body1">
-//                   <strong>Дата начала:</strong>{' '}
-//                   {new Date(tour.startDate).toLocaleDateString()}
-//                 </Typography>
-//               </Grid>
-//               <Grid item xs={6}>
-//                 <Typography variant="body1">
-//                   <strong>Дата окончания:</strong>{' '}
-//                   {new Date(tour.endDate).toLocaleDateString()}
-//                 </Typography>
-//               </Grid>
-//               <Grid item xs={6}>
-//                 <Typography variant="body1">
-//                   <strong>Макс. участников:</strong> {tour.maxParticipants}
-//                 </Typography>
-//               </Grid>
-//             </Grid>
-//           </Grid>
-
-//           <Grid item xs={12} md={4}>
-//             <Paper
-//               elevation={3}
-//               sx={{
-//                 p: 3,
-//                 position: 'sticky',
-//                 top: 100
-//               }}
-//             >
-//               <Typography variant="h5" gutterBottom>
-//                 {tour.price} ₽
-//               </Typography>
-//               <Typography variant="body2" color="text.secondary" paragraph>
-//                 за человека
-//               </Typography>
-
-//               <Box component="form" onSubmit={handleBookingSubmit}>
-//                 <TextField
-//                   fullWidth
-//                   type="number"
-//                   name="numberOfPeople"
-//                   label="Количество человек"
-//                   value={bookingData.numberOfPeople}
-//                   onChange={handleBookingChange}
-//                   inputProps={{ min: 1, max: tour.maxParticipants }}
-//                   sx={{ mb: 2 }}
-//                 />
-//                 <TextField
-//                   fullWidth
-//                   multiline
-//                   rows={4}
-//                   name="specialRequests"
-//                   label="Особые пожелания"
-//                   value={bookingData.specialRequests}
-//                   onChange={handleBookingChange}
-//                   sx={{ mb: 2 }}
-//                 />
-//                 {error && (
-//                   <Alert severity="error" sx={{ mb: 2 }}>
-//                     {error}
-//                   </Alert>
-//                 )}
-//                 {success && (
-//                   <Alert severity="success" sx={{ mb: 2 }}>
-//                     Бронирование успешно создано!
-//                   </Alert>
-//                 )}
-//                 <Button
-//                   type="submit"
-//                   variant="contained"
-//                   color="primary"
-//                   fullWidth
-//                   size="large"
-//                 >
-//                   Забронировать
-//                 </Button>
-//               </Box>
-//             </Paper>
-//           </Grid>
-//         </Grid>
-//       </motion.div>
-//     </Container>
-//   );
-// };
-
-// export default TourDetails; 
-
-
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import './TourDetails.css';
@@ -282,16 +11,24 @@ const TourDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { isAuthenticated } = useSelector((state) => state.auth);
+
   const [tour, setTour] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(null);
+
   const [bookingData, setBookingData] = useState({
     numberOfPeople: 1,
     specialRequests: ''
   });
+
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
+  const [showConfirm, setShowConfirm] = useState(false); // управление модальным окном
+  const [booked, setBooked] = useState(false); // состояние бронирования
+  const [bookingMessage, setBookingMessage] = useState(''); // сообщение для пользователя
+
+  // Получаем детали тура
   useEffect(() => {
     fetchTourDetails();
   }, [id]);
@@ -308,14 +45,10 @@ const TourDetails = () => {
     }
   };
 
-  const handleImageClick = (image) => {
-    setSelectedImage(image);
-  };
+  const handleImageClick = (image) => setSelectedImage(image);
+  const handleCloseImage = () => setSelectedImage(null);
 
-  const handleCloseImage = () => {
-    setSelectedImage(null);
-  };
-
+  // Обновление данных бронирования из формы
   const handleBookingChange = (e) => {
     setBookingData({
       ...bookingData,
@@ -323,35 +56,47 @@ const TourDetails = () => {
     });
   };
 
-  const handleBookingSubmit = async (e) => {
+  // Обработчик кнопки "Забронировать" — открываем модалку
+  const handleBookingSubmit = (e) => {
     e.preventDefault();
     if (!isAuthenticated) {
       navigate('/login');
       return;
     }
+    setShowConfirm(true);
+  };
 
+  // Подтверждение бронирования
+  const confirmBooking = async () => {
     try {
       const token = localStorage.getItem('token');
       await axios.post(
         `${API_URL}/bookings`,
-        {
-          tourId: id,
-          ...bookingData
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
+        { tourId: id, ...bookingData },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
+
       setSuccess(true);
       setError(null);
-      setBookingData({
-        numberOfPeople: 1,
-        specialRequests: ''
-      });
+      setBooked(true); // тур отмечаем как забронированный
+      setBookingMessage('Бронирование успешно создано!'); // новое сообщение
+
+      // Сбрасываем данные бронирования
+      setBookingData({ numberOfPeople: 1, specialRequests: '' });
     } catch (error) {
       setError(error.response?.data?.message || 'Ошибка при бронировании');
       setSuccess(false);
+    } finally {
+      setShowConfirm(false);
     }
+  };
+
+  // Отмена бронирования
+  const cancelBooking = () => {
+    setBooked(false);
+    setSuccess(true);
+    setError(null);
+    setBookingMessage('Бронирование отменено'); // новое сообщение
   };
 
   if (loading) {
@@ -372,44 +117,21 @@ const TourDetails = () => {
 
   return (
     <div className="container-tour-details">
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
         <div className="grid-details">
           <div className="main-content">
             <h1>{tour.title}</h1>
             <p>{tour.description}</p>
 
-              {tour.images?.map((image, index) => (
-                <div
-                  key={index}
-                  className="image-item"
-                  onClick={() => handleImageClick(image)}
-                >
-                  <img
-                    src={`http://localhost:5000${image}`}
-                    alt={`${tour.title} - фото ${index + 1}`}
-                    loading="lazy"
-                  />
-                </div>
-              ))}
-            {/* <div className="image-list">
-              {tour.images?.map((image, index) => (
-                <div
-                  key={index}
-                  className="image-item"
-                  onClick={() => handleImageClick(image)}
-                >
-                  <img
-                    src={`http://localhost:5000${image}`}
-                    alt={`${tour.title} - фото ${index + 1}`}
-                    loading="lazy"
-                  />
-                </div>
-              ))}
-            </div> */}
+            {tour.images?.map((image, index) => (
+              <div key={index} className="image-item" onClick={() => handleImageClick(image)}>
+                <img
+                  src={`http://localhost:5000${image}`}
+                  alt={`${tour.title} - фото ${index + 1}`}
+                  loading="lazy"
+                />
+              </div>
+            ))}
 
             {selectedImage && (
               <div className="dialog" onClick={handleCloseImage}>
@@ -445,19 +167,84 @@ const TourDetails = () => {
                     value={bookingData.numberOfPeople}
                     onChange={handleBookingChange}
                     required
+                    disabled={booked} // если уже забронировано — нельзя менять
                   />
                 </label>
 
-
                 {error && <div className="alert error">{error}</div>}
-                {success && <div className="alert success">Бронирование успешно создано!</div>}
+                {success && (
+                  <div
+                    className={`alert ${
+                      booked ? 'success' : 'error'
+                    }`}
+                  >
+                    {bookingMessage}
+                  </div>
+                )}
 
-                <button type="submit" className="book-button">Забронировать</button>
+                {/* Кнопки меняются в зависимости от состояния бронирования */}
+                {!booked ? (
+                  <button type="submit" className="book-button">Забронировать</button>
+                ) : (
+                  <>
+                    <button type="button" className="cancel-booking-button" onClick={cancelBooking}>
+                      Отменить бронирование
+                    </button>
+                    <button type="button" className="other-tours-button" onClick={() => navigate('/tours')}>
+                      К другим турам
+                    </button>
+                  </>
+                )}
               </form>
             </div>
           </div>
         </div>
       </motion.div>
+
+      {/* Модальное окно подтверждения */}
+      <AnimatePresence>
+        {showConfirm && (
+          <motion.div
+            className="modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="modal-content"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <h1 className="text-xl font-bold mb-4">Подтверждение бронирования</h1>
+              <h3 className="text-xl font-bold mb-5">Вы уверены, что хотите забронировать тур?</h3>
+
+              <ul className="modal-details">
+                <li><strong>Название:</strong> {tour.title}</li>
+                <li><strong>Направление:</strong> {tour.destination}</li>
+                <li><strong>Стоимость:</strong> {tour.price} ₽</li>
+                <li><strong>Количество человек:</strong> {bookingData.numberOfPeople}</li>
+              </ul>
+
+              <div className="modal-actions">
+                <button
+                  onClick={() => setShowConfirm(false)}
+                  className="cancel-btn"
+                >
+                  Отмена
+                </button>
+                <button
+                  onClick={confirmBooking}
+                  className="confirm-btn"
+                >
+                  Подтвердить
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

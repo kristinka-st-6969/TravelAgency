@@ -423,12 +423,15 @@ button.danger {
 }
 
 .form-group input,
-.form-group textarea {
+.form-group textarea,
+.form-group select {
   width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  font-family: inherit;   /* наследует шрифт от body */
+  font-size: 16px;       
+  color: #333;            /* единый цвет текста */
+  line-height: 1.4;
 }
+
 
 .form-group input:focus,
 .form-group textarea:focus {
