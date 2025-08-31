@@ -1,124 +1,336 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap');
+
 .container-profile {
-  max-width: 1200px;
+  max-width: 1320px;
   margin: 40px auto;
-  padding: 0 15px;
+  padding: 0 20px;
+  font-family: 'Source Sans 3', sans-serif;
+  color: #333;
 }
 
 .grid-profile {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 30px;
+  margin-bottom: 40px;
+  align-items: start; /* Выравнивание по верху */
 }
 
 .profile-card {
-  flex: 1 1 30%;
-  background: #fff;
-  padding: 20px;
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
   text-align: center;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* Контент по верху */
+  height: fit-content; /* Высота по содержимому */
 }
 
 .avatar-profile {
-  width: 120px;
-  height: 120px;
+  width: 140px;
+  height: 140px;
   border-radius: 50%;
   object-fit: cover;
+  margin-bottom: 20px;
+  border: 4px solid #e3f2fd;
+}
+
+.profile-card h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.8rem;
+  color: #1976d2;
   margin-bottom: 10px;
 }
 
 .email {
-  color: #777;
-}
-
-.upload-btn {
-  display: inline-block;
-  margin-top: 15px;
-  padding: 8px 12px;
-  border: 1px solid #1976d2;
-  border-radius: 4px;
-  background: #fff;
-  color: #1976d2;
-  cursor: pointer;
-}
-
-.profile-content {
-  flex: 1 1 65%;
-  background: #fff;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-}
-
-.tabs {
-  display: flex;
-  gap: 10px;
+  color: #666;
+  font-size: 1.1rem;
   margin-bottom: 20px;
 }
 
-.tabs button {
-  flex: 1;
-  padding: 10px;
-  background: #f5f5f5;
-  border: 1px solid #ccc;
-  cursor: pointer;
-  border-radius: 4px;
+.profile-content {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+  height: fit-content; /* Высота по содержимому */
 }
 
-.tabs .active {
-  background: #1976d2;
-  color: #fff;
+/* ===== TABS ===== */
+.tabs {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 15px;
+}
+
+.tabs button {
+  padding: 12px 24px;
+  background: none;
+  border: 2px solid transparent;
+  border-radius: 50px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tabs button:hover {
+  color: #1976d2;
   border-color: #1976d2;
+}
+
+.tabs button.active {
+  background: #1976d2;
+  color: white;
+  border-color: #1976d2;
+}
+
+/* ===== FORMS ===== */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #333;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
 }
 
 input[type="text"],
 input[type="email"],
 input[type="password"] {
   width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 1rem;
+  transition: all 0.3s ease;
 }
 
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+}
+
+/* ===== BUTTONS ===== */
 .primary-btn {
-  margin-top: 15px;
-  padding: 10px 20px;
+  padding: 12px 24px;
   background: #1976d2;
-  color: #fff;
+  color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 50px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
   cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
 }
 
 .primary-btn:hover {
   background: #1565c0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
 }
 
+.secondary-btn {
+  padding: 10px 20px;
+  background: #d32f2f;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.secondary-btn:hover {
+  background: #b71c1c;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+}
+
+/* ===== ALERTS ===== */
 .alert {
-  padding: 10px;
-  margin-bottom: 15px;
-  border-radius: 4px;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  font-weight: 600;
 }
 
 .alert.error {
-  background: #f8d7da;
-  color: #842029;
+  background: #ffebee;
+  color: #d32f2f;
+  border: 2px solid #ffcdd2;
 }
 
 .alert.success {
-  background: #d1e7dd;
-  color: #0f5132;
+  background: #e8f5e8;
+  color: #2e7d32;
+  border: 2px solid #c8e6c9;
+}
+
+/* ===== BOOKINGS GRID ===== */
+.bookings-grid-profile {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+  gap: 20px !important;
+  margin-top: 20px !important;
 }
 
 .booking-card {
-  background: #f9f9f9;
-  padding: 15px;
-  margin-bottom: 10px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 12px;
+  border: 2px solid #e9ecef;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
+.booking-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.booking-card h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.3rem;
+  color: #1976d2;
+  margin-bottom: 15px;
+  text-align: left;
+  width: 100%;
+}
+
+.booking-card p {
+  margin-bottom: 8px;
+  color: #444;
+  text-align: left;
+  width: 100%;
+}
+
+/* Status badges */
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  margin-left: 10px;
+  text-transform: uppercase;
+}
+
+.status-pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-confirmed {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-cancelled {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* ===== MODAL ===== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.modal-content h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.5rem;
+  color: #1976d2;
+  margin-bottom: 20px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 25px;
+}
+
+.cancel-btn {
+  padding: 12px 24px;
+  background: #d32f2f;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cancel-btn:hover {
+  background: #b71c1c;
+  transform: translateY(-2px);
+}
+
+.confirm-btn {
+  padding: 12px 24px;
+  background: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.confirm-btn:hover {
+  background: #1565c0;
+  transform: translateY(-2px);
+}
+
+/* ===== LOADING ===== */
 .loading-container {
   display: flex;
   justify-content: center;
@@ -127,9 +339,9 @@ input[type="password"] {
 }
 
 .spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid #ccc;
+  width: 50px;
+  height: 50px;
+  border: 4px solid #e0e0e0;
   border-top: 4px solid #1976d2;
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -141,77 +353,103 @@ input[type="password"] {
   }
 }
 
-/* Адаптивность */
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1200px) {
+  .bookings-grid-profile {
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  }
+}
 
-/* Больше 1400px */
-@media (min-width: 1400px) {
+@media (max-width: 992px) {
+  .grid-profile {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .profile-card {
+    order: -1;
+  }
+  
+  .bookings-grid-profile {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
   .container-profile {
-    max-width: 1300px;
+    padding: 0 15px;
+    margin: 20px auto;
   }
-}
-
-@media (max-width: 1399px) and (min-width: 1200px) {
-  .profile-card {
-    flex: 1 1 30%;
-  }
-  .profile-content {
-    flex: 1 1 65%;
-  }
-}
-
-@media (max-width: 1199px) and (min-width: 992px) {
-  .profile-card {
-    flex: 1 1 40%;
-  }
-  .profile-content {
-    flex: 1 1 55%;
-  }
-}
-
-@media (max-width: 991px) and (min-width: 768px) {
-  .profile-card {
-    flex: 1 1 100%;
-  }
-  .profile-content {
-    flex: 1 1 100%;
-  }
+  
   .tabs {
     flex-direction: column;
+    gap: 10px;
   }
-}
-
-@media (max-width: 767px) and (min-width: 576px) {
-  .profile-card {
-    flex: 1 1 100%;
+  
+  .tabs button {
+    width: 100%;
+    text-align: center;
   }
-  .profile-content {
-    flex: 1 1 100%;
+  
+  .bookings-grid-profile {
+    grid-template-columns: 1fr;
   }
-  .tabs {
-    flex-direction: column;
-  }
-}
-
-@media (max-width: 575px) {
-  .container-profile {
-    padding: 0 10px;
-  }
-  .profile-card {
-    flex: 1 1 100%;
+  
+  .booking-card {
     padding: 15px;
   }
-  .profile-content {
-    flex: 1 1 100%;
-    padding: 15px;
+  
+  .booking-card h3 {
+    font-size: 1.2rem;
   }
-  .tabs {
+  
+  .modal-actions {
     flex-direction: column;
   }
+  
+  .cancel-btn,
+  .confirm-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .profile-card,
+  .profile-content {
+    padding: 20px;
+  }
+  
   .avatar-profile {
     width: 100px;
     height: 100px;
   }
-  .primary-btn {
-    width: 100%;
+  
+  .profile-card h2 {
+    font-size: 1.5rem;
   }
+  
+  .tabs button {
+    padding: 10px 20px;
+    font-size: 1rem;
+  }
+  
+  .bookings-grid-profile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mb-5 {
+  margin-bottom: 20px;
+}
+
+/* Accessibility - hide labels visually but keep for screen readers */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
 }

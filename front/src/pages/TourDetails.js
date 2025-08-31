@@ -28,6 +28,7 @@ const TourDetails = () => {
   const [booked, setBooked] = useState(false); // состояние бронирования
   const [bookingMessage, setBookingMessage] = useState(''); // сообщение для пользователя
 
+  const totalPrice = tour ? tour.price * bookingData.numberOfPeople : 0;
   // Получаем детали тура
   useEffect(() => {
     fetchTourDetails();
@@ -157,27 +158,24 @@ const TourDetails = () => {
               <p className="price-note">за человека</p>
 
               <form onSubmit={handleBookingSubmit}>
-                <label>
-                  Количество человек:
+                <div className="form-group">
+                  <label htmlFor="numberOfPeople">Количество человек:</label>
                   <input
                     type="number"
+                    id="numberOfPeople"
                     name="numberOfPeople"
                     min="1"
                     max={tour.maxParticipants}
                     value={bookingData.numberOfPeople}
                     onChange={handleBookingChange}
                     required
-                    disabled={booked} // если уже забронировано — нельзя менять
+                    disabled={booked}
                   />
-                </label>
+                </div>
 
                 {error && <div className="alert error">{error}</div>}
                 {success && (
-                  <div
-                    className={`alert ${
-                      booked ? 'success' : 'error'
-                    }`}
-                  >
+                  <div className={`alert ${booked ? 'success' : 'error'}`}>
                     {bookingMessage}
                   </div>
                 )}
@@ -186,14 +184,14 @@ const TourDetails = () => {
                 {!booked ? (
                   <button type="submit" className="book-button">Забронировать</button>
                 ) : (
-                  <>
-                    <button type="button" className="cancel-booking-button" onClick={cancelBooking}>
+                  <div className="booking-actions">
+                    <button type="button" className="cancel-booking-btn" onClick={cancelBooking}>
                       Отменить бронирование
                     </button>
-                    <button type="button" className="other-tours-button" onClick={() => navigate('/tours')}>
+                    <button type="button" className="back-to-tours-btn" onClick={() => navigate('/tours')}>
                       К другим турам
                     </button>
-                  </>
+                  </div>
                 )}
               </form>
             </div>
@@ -223,8 +221,9 @@ const TourDetails = () => {
               <ul className="modal-details">
                 <li><strong>Название:</strong> {tour.title}</li>
                 <li><strong>Направление:</strong> {tour.destination}</li>
-                <li><strong>Стоимость:</strong> {tour.price} ₽</li>
+                <li><strong>Стоимость за человека:</strong> {tour.price} ₽</li>
                 <li><strong>Количество человек:</strong> {bookingData.numberOfPeople}</li>
+                <li><strong>Общая стоимость:</strong> {totalPrice} ₽</li>
               </ul>
 
               <div className="modal-actions">

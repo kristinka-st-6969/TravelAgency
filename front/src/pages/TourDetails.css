@@ -1,133 +1,308 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap');
+
 .container-tour-details {
-  max-width: 1200px;
+  max-width: 1320px;
   margin: 40px auto;
   padding: 0 20px;
+  font-family: 'Source Sans 3', sans-serif;
+  color: #333;
 }
 
 .grid-details {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+  align-items: start;
 }
 
 .main-content {
-  flex: 1 1 60%;
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
 }
 
 .side-content {
-  flex: 1 1 35%;
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
   position: sticky;
   top: 100px;
 }
 
+/* ===== IMAGES ===== */
 .image-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 10px;
-  margin-bottom: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
 }
 
 .image-item img {
   width: 100%;
-  height: 100%;
+  height: 450px;
   object-fit: cover;
   cursor: pointer;
-  border-radius: 8px;
-  transition: transform 0.3s;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  border: 2px solid #e0e0e0;
 }
 
 .image-item img:hover {
-  transform: scale(1.05);
+  transform: scale(1.01);
+  box-shadow: 0 8px 20px rgba(25, 118, 210, 0.2);
 }
 
+/* Main tour image */
+.tour-main-image {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+  border-radius: 16px;
+  margin-bottom: 25px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== DIALOG ===== */
 .dialog {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.9);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 2000;
 }
 
 .dialog-content img {
   max-width: 90%;
   max-height: 90%;
-  border-radius: 8px;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
+/* ===== DETAILS ===== */
 .details-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin: 25px 0;
 }
 
-.booking-card {
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+.detail-item {
+  background: #f8f9fa;
   padding: 20px;
-  border-radius: 10px;
+  border-radius: 12px;
+  border: 2px solid #e9ecef;
 }
 
-.booking-card h2 {
+.detail-item h4 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.1rem;
+  color: #1976d2;
   margin-bottom: 10px;
 }
 
-.price-note {
-  color: #777;
-  margin-bottom: 20px;
+.detail-item p {
+  color: #444;
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 500;
 }
 
+/* ===== BOOKING CARD ===== */
+.booking-card {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+}
+
+.booking-card h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.8rem;
+  color: #1976d2;
+  margin-bottom: 15px;
+}
+
+.price-note {
+  color: #666;
+  font-size: 1.1rem;
+  margin-bottom: 25px;
+  font-style: italic;
+}
+
+/* Стиль для отображения общей стоимости */
+.total-price {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.5rem;
+  color: #2e7d32;
+  font-weight: 600;
+  margin: 15px 0;
+  padding: 10px;
+  background: #e8f5e8;
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* ===== FORMS ===== */
 .booking-card form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 20px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #333;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
 }
 
 .booking-card input,
-.booking-card textarea {
+.booking-card textarea,
+.booking-card select {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 16px;
+  padding: 14px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 1rem;
+  transition: all 0.3s ease;
 }
 
+.booking-card input:focus,
+.booking-card textarea:focus,
+.booking-card select:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+}
+
+/* ===== BUTTONS ===== */
 .book-button {
+  padding: 14px 28px;
   background: #1976d2;
-  color: #fff;
-  padding: 12px;
+  color: white;
   border: none;
-  border-radius: 6px;
-  font-size: 16px;
+  border-radius: 50px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 15px;
 }
 
 .book-button:hover {
   background: #1565c0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
 }
 
+.book-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Контейнер для кнопок после бронирования */
+.booking-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+/* Кнопка "К другим турам" */
+.back-to-tours-btn {
+  padding: 14px 28px;
+  background: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  text-decoration: none;
+}
+
+.back-to-tours-btn:hover {
+  background: #1565c0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+}
+
+/* Кнопка "Отменить бронирование" */
+.cancel-booking-btn {
+  padding: 14px 28px;
+  background: #d32f2f;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.cancel-booking-btn:hover {
+  background: #b71c1c;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+}
+
+/* ===== ALERTS ===== */
 .alert {
-  padding: 10px;
-  border-radius: 6px;
-  font-size: 14px;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  border: 2px solid transparent;
 }
 
 .alert.error {
-  background: #f8d7da;
-  color: #842029;
+  background: #ffebee;
+  color: #d32f2f;
+  border-color: #ffcdd2;
 }
 
 .alert.success {
-  background: #d1e7dd;
-  color: #0f5132;
+  background: #e8f5e8;
+  color: #2e7d32;
+  border-color: #c8e6c9;
 }
 
+/* ===== LOADING ===== */
 .loading-container {
   display: flex;
   justify-content: center;
@@ -136,12 +311,12 @@
 }
 
 .loader {
-  border: 6px solid #f3f3f3;
-  border-top: 6px solid #1976d2;
-  border-radius: 50%;
   width: 50px;
   height: 50px;
-  animation: spin 0.8s linear infinite;
+  border: 4px solid #e0e0e0;
+  border-top: 4px solid #1976d2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
@@ -151,155 +326,229 @@
 }
 
 .error-text {
-  color: red;
+  color: #d32f2f;
+  font-weight: 600;
+  margin-top: 5px;
+  font-size: 0.9rem;
 }
 
-
-@media (min-width: 1400px) {
-  .container-tour-details {
-    max-width: 1320px;
-  }
-}
-
-@media (min-width: 1200px) and (max-width: 1399.98px) {
-  .container-tour-details {
-    max-width: 1140px;
-  }
-}
-
-@media (min-width: 992px) and (max-width: 1199.98px) {
-  .container-tour-details {
-    max-width: 960px;
-  }
-}
-
-@media (min-width: 768px) and (max-width: 991.98px) {
-  .container-tour-details {
-    max-width: 720px;
-  }
-  .grid-details {
-    flex-direction: column;
-  }
-  .main-content,
-  .side-content {
-    flex: 1 1 100%;
-    position: static;
-  }
-}
-
-@media (min-width: 576px) and (max-width: 767.98px) {
-  .container-tour-details {
-    max-width: 540px;
-  }
-  .grid-details {
-    flex-direction: column;
-  }
-  .main-content,
-  .side-content {
-    flex: 1 1 100%;
-    position: static;
-  }
-  .details-grid {
-    grid-template-columns: 1fr;
-  }
-  .image-item img {
-    height: 150px;
-  }
-}
-
-@media (max-width: 575.98px) {
-  .container-tour-details {
-    padding: 0 10px;
-  }
-  .grid-details {
-    flex-direction: column;
-  }
-  .main-content,
-  .side-content {
-    flex: 1 1 100%;
-    position: static;
-  }
-  .details-grid {
-    grid-template-columns: 1fr;
-  }
-  .image-item img {
-    height: 120px;
-  }
-  .booking-card h2 {
-    font-size: 18px;
-  }
-  .book-button {
-    padding: 10px;
-    font-size: 14px;
-  }
-}
-
-/* затемнение */
+/* ===== MODAL ===== */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
-  align-items: center;
   justify-content: center;
-  z-index: 2000;
+  align-items: center;
+  z-index: 3000;
+  padding: 20px;
 }
 
-/* окно */
 .modal-content {
-  background: #fff;
+  background: white;
   border-radius: 16px;
-  padding: 24px;
-  max-width: 600px;
-  width: 90%;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  padding: 30px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
-/* список инфы */
 .modal-details {
-  margin: 12px 0 20px 0;
+  margin: 20px 0;
   padding: 0;
   list-style: none;
 }
 
 .modal-details li {
-  margin-bottom: 6px;
-  font-size: 15px;
-  color: #333;
+  margin-bottom: 10px;
+  font-size: 1rem;
+  color: #444;
+  padding: 8px 0;
+  border-bottom: 1px solid #e0e0e0;
 }
 
-/* кнопки */
+.modal-details li:last-child {
+  border-bottom: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #2e7d32;
+}
+
 .modal-actions {
   display: flex;
+  gap: 15px;
   justify-content: flex-end;
-  gap: 12px;
+  margin-top: 25px;
 }
 
 .cancel-btn {
-  background: #de0707;
-  padding: 8px 16px;
-  border-radius: 8px;
+  padding: 12px 24px;
+  background: #d32f2f;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .cancel-btn:hover {
-  background: #de0707;
-  opacity: 70%;
+  background: #b71c1c;
+  transform: translateY(-2px);
 }
 
 .confirm-btn {
+  padding: 12px 24px;
   background: #1976d2;
   color: white;
-  padding: 8px 16px;
-  border-radius: 8px;
+  border: none;
+  border-radius: 50px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .confirm-btn:hover {
-  background: #1976d2;
-  opacity: 70%;
+  background: #1565c0;
+  transform: translateY(-2px);
 }
 
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1200px) {
+  .container-tour-details {
+    max-width: 1140px;
+  }
+}
+
+@media (max-width: 992px) {
+  .container-tour-details {
+    max-width: 960px;
+  }
+  
+  .grid-details {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .side-content {
+    position: static;
+    order: -1;
+  }
+  
+  .details-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+  
+  .tour-main-image {
+    height: 400px;
+  }
+  
+  .image-item img {
+    height: 300px; /* Соответствующее увеличение для мобильных */
+  }
+  
+  .image-list {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .container-tour-details {
+    padding: 0 15px;
+    margin: 20px auto;
+  }
+  
+  .main-content,
+  .side-content {
+    padding: 20px;
+  }
+  
+  .tour-main-image {
+    height: 350px;
+  }
+  
+  .image-list {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+  
+  .image-item img {
+    height: 250px; /* Соответствующее увеличение для мобильных */
+  }
+  
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal-actions {
+    flex-direction: column;
+  }
+  
+  .cancel-btn,
+  .confirm-btn {
+    width: 100%;
+  }
+  
+  .booking-actions {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 576px) {
+  .container-tour-details {
+    padding: 0 10px;
+  }
+  
+  .main-content,
+  .side-content {
+    padding: 15px;
+  }
+  
+  .tour-main-image {
+    height: 300px;
+  }
+  
+  .booking-card h2 {
+    font-size: 1.5rem;
+  }
+  
+  .image-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .image-item img {
+    height: 200px; /* Соответствующее увеличение для мобильных */
+  }
+  
+  .book-button,
+  .back-to-tours-btn,
+  .cancel-booking-btn {
+    padding: 12px 20px;
+    font-size: 1rem;
+  }
+}
+
+/* Accessibility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* Focus styles */
+button:focus,
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid #1976d2;
+  outline-offset: 2px;
+}

@@ -47,7 +47,6 @@ const Home = () => {
           ))}
         </div>
       </div>
-
       {/* Popular Destinations */}
       <div className="destinations-section">
         <h2 className="section-title">Популярные направления</h2>

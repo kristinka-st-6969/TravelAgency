@@ -190,37 +190,114 @@ const Profile = () => {
                 // Если есть изменения, открываем модальное окно для подтверждения
                 openModal('profile', { message: 'Вы уверены, что хотите сохранить изменения в профиле?' });
               }}>
-                <input type="text" name="name" placeholder="Имя" value={formData.name} onChange={handleChange} required />
-                <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
+                <div className="form-group">
+                  <label htmlFor="name">Имя пользователя</label>
+                  <input 
+                    type="text" 
+                    id="name"
+                    name="name" 
+                    placeholder="Введите ваше имя" 
+                    value={formData.name} 
+                    onChange={handleChange} 
+                    required 
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label htmlFor="email">Email</label>
+                  <input 
+                    type="email" 
+                    id="email"
+                    name="email" 
+                    placeholder="Введите ваш email" 
+                    value={formData.email} 
+                    onChange={handleChange} 
+                    required 
+                  />
+                </div>
+                
                 <button type="submit" className="primary-btn">Сохранить изменения</button>
               </form>
             )}
 
             {value === 1 && (
               <div>
-                {bookings.length === 0 ? <p>У вас пока нет бронирований</p> : bookings.map((booking) => (
-                  <div key={booking.id} className="booking-card">
-                    <h3>{booking.Tour.title}</h3>
-                    <p>Статус: {getStatusText(booking.status)}</p>
-                    <p>Дата: {new Date(booking.createdAt).toLocaleDateString()}</p>
-                    <p>Количество человек: {booking.numberOfPeople}</p>
-                    <p>Общая стоимость: {booking.totalPrice} ₽</p>
+                {bookings.length === 0 ? (
+                  <p>У вас пока нет бронирований</p>
+                ) : (
+                  <div className="bookings-grid-profile">
+                    {bookings.map((booking) => (
+                      <div key={booking.id} className="booking-card">
+                        <h3>{booking.Tour?.title || 'Неизвестный тур'}</h3>
+                        <p>
+                          Статус: 
+                          <span className={`status-badge status-${booking.status}`}>
+                            {getStatusText(booking.status)}
+                          </span>
+                        </p>
+                        <p>Дата бронирования: {new Date(booking.createdAt).toLocaleDateString()}</p>
+                        <p>Количество человек: {booking.numberOfPeople}</p>
+                        <p>Общая стоимость: {booking.totalPrice} ₽</p>
 
-                    {booking.status !== "cancelled" && (
-                      <button className="secondary-btn" onClick={() => openModal('cancelBooking', { id: booking.id, message: 'Вы уверены, что хотите отменить это бронирование?' })}>
-                        Отменить
-                      </button>
-                    )}
+                        {booking.status !== "cancelled" && (
+                          <button 
+                            className="secondary-btn" 
+                            onClick={() => openModal('cancelBooking', { 
+                              id: booking.id, 
+                              message: 'Вы уверены, что хотите отменить это бронирование?' 
+                            })}
+                          >
+                            Отменить бронирование
+                          </button>
+                        )}
+                      </div>
+                    ))}
                   </div>
-                ))}
+                )}
               </div>
             )}
 
             {value === 2 && (
               <form onSubmit={(e) => { e.preventDefault(); openModal('password', { message: 'Вы уверены, что хотите изменить пароль?' }); }}>
-                <input type="password" name="currentPassword" placeholder="Текущий пароль" value={formData.currentPassword} onChange={handleChange} required />
-                <input type="password" name="newPassword" placeholder="Новый пароль" value={formData.newPassword} onChange={handleChange} required />
-                <input type="password" name="confirmPassword" placeholder="Подтвердите новый пароль" value={formData.confirmPassword} onChange={handleChange} required />
+                <div className="form-group">
+                  <label htmlFor="currentPassword">Текущий пароль</label>
+                  <input 
+                    type="password" 
+                    id="currentPassword"
+                    name="currentPassword" 
+                    placeholder="Введите текущий пароль" 
+                    value={formData.currentPassword} 
+                    onChange={handleChange} 
+                    required 
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label htmlFor="newPassword">Новый пароль</label>
+                  <input 
+                    type="password" 
+                    id="newPassword"
+                    name="newPassword" 
+                    placeholder="Введите новый пароль" 
+                    value={formData.newPassword} 
+                    onChange={handleChange} 
+                    required 
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label htmlFor="confirmPassword">Подтвердите новый пароль</label>
+                  <input 
+                    type="password" 
+                    id="confirmPassword"
+                    name="confirmPassword" 
+                    placeholder="Подтвердите новый пароль" 
+                    value={formData.confirmPassword} 
+                    onChange={handleChange} 
+                    required 
+                  />
+                </div>
+                
                 <button type="submit" className="primary-btn">Изменить пароль</button>
               </form>
             )}

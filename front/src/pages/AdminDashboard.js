@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { motion,  AnimatePresence } from 'framer-motion';
-import {useNavigate, Routes, Route} from "react-router-dom"
-import axios from "axios"
+import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate, Routes, Route } from "react-router-dom";
+import axios from "axios";
 import './AdminDashboard.css';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
@@ -23,9 +23,9 @@ const ConfirmModal = ({ show, message, onConfirm, onCancel }) => (
           exit={{ scale: 0.8, opacity: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <h3 className="mb-5">{message}</h3>
+          <h3>{message}</h3>
           <div className="modal-actions">
-            <button className="btn btn-secondary" onClick={onCancel}>
+            <button className="btn btn-danger" onClick={onCancel}>
               Отмена
             </button>
             <button className="btn btn-primary" onClick={onConfirm}>
@@ -41,9 +41,8 @@ const ConfirmModal = ({ show, message, onConfirm, onCancel }) => (
 // Компонент для управления турами
 const ToursManagement = () => {
   const [page, setPage] = useState(1);
-  const [limit] = useState(3);
+  const [limit] = useState(6);
   const [totalPages, setTotalPages] = useState(1);
-
   const [tours, setTours] = useState([]);
   const [form, setForm] = useState({
     id: null,
@@ -63,6 +62,7 @@ const ToursManagement = () => {
   const [destModal, setDestModal] = useState(false);
   const [destinations, setDestinations] = useState([]);
   const [newDest, setNewDest] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [confirmModal, setConfirmModal] = useState({
     show: false,
@@ -73,13 +73,14 @@ const ToursManagement = () => {
   // Получение всех туров
   const fetchTours = async () => {
     try {
-      const res = await axios.get(
-        `${API_URL}/tours?page=${page}&limit=${limit}`
-      );
+      setLoading(true);
+      const res = await axios.get(`${API_URL}/tours?page=${page}&limit=${limit}`);
       setTours(res.data.tours);
       setTotalPages(res.data.totalPages);
     } catch (error) {
-      console.error(error);
+      console.error('Ошибка при загрузке туров:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -93,27 +94,34 @@ const ToursManagement = () => {
       const res = await axios.get(`${API_URL}/destinations`);
       setDestinations(res.data);
     } catch (err) {
-      console.error(err);
+      console.error('Ошибка при загрузке направлений:', err);
     }
   };
 
   const handleAddDest = async () => {
     if (!newDest.trim()) return;
-    await axios.post(`${API_URL}/destinations`, { name: newDest });
-    setNewDest("");
-    fetchDestinations();
+    try {
+      await axios.post(`${API_URL}/destinations`, { name: newDest });
+      setNewDest("");
+      fetchDestinations();
+    } catch (error) {
+      console.error('Ошибка при добавлении направления:', error);
+    }
   };
 
   const handleDeleteDest = async (id) => {
-    await axios.delete(`${API_URL}/destinations/${id}`);
-    fetchDestinations();
+    try {
+      await axios.delete(`${API_URL}/destinations/${id}`);
+      fetchDestinations();
+    } catch (error) {
+      console.error('Ошибка при удалении направления:', error);
+    }
   };
 
-
-  // Обработка изменения обычных полей
+  // Обработка изменения полей формы
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setForm((prev) => ({
+    setForm(prev => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
@@ -122,12 +130,10 @@ const ToursManagement = () => {
   // Обработка изменения дат с авторасчетом длительности
   const handleDateChange = (e) => {
     const { name, value } = e.target;
-
-    setForm((prev) => {
+    setForm(prev => {
       let updatedForm = { ...prev, [name]: value };
 
       if (name === "startDate" && updatedForm.endDate && updatedForm.endDate < value) {
-        // если дата окончания раньше новой даты начала → очищаем
         updatedForm.endDate = "";
         updatedForm.duration = "";
       }
@@ -136,8 +142,7 @@ const ToursManagement = () => {
         const start = new Date(updatedForm.startDate);
         const end = new Date(updatedForm.endDate);
         if (end >= start) {
-          const diff =
-            Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1; // в днях
+          const diff = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
           updatedForm.duration = diff;
         }
       }
@@ -151,11 +156,11 @@ const ToursManagement = () => {
     setImages(e.target.files);
   };
 
-  // Отправка формы (создание или обновление)
+  // Отправка формы
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const formData = new FormData();
+    
     Object.entries(form).forEach(([key, val]) => formData.append(key, val));
     for (let i = 0; i < images.length; i++) {
       formData.append("images", images[i]);
@@ -171,29 +176,15 @@ const ToursManagement = () => {
           headers: { "Content-Type": "multipart/form-data" },
         });
       }
-      setForm({
-        id: null,
-        title: "",
-        description: "",
-        price: "",
-        duration: "",
-        destination: "",
-        startDate: "",
-        endDate: "",
-        maxParticipants: "",
-        isActive: true,
-      });
-      setImages([]);
-      setEditing(false);
+      resetForm();
       fetchTours();
       setModalOpen(false);
     } catch (error) {
-      console.error(error);
+      console.error('Ошибка при сохранении тура:', error);
     }
   };
 
-  // Открыть модалку для создания тура
-  const handleOpenCreate = () => {
+  const resetForm = () => {
     setForm({
       id: null,
       title: "",
@@ -206,8 +197,13 @@ const ToursManagement = () => {
       maxParticipants: "",
       isActive: true,
     });
-    setEditing(false);
     setImages([]);
+    setEditing(false);
+  };
+
+  // Открыть модалку для создания тура
+  const handleOpenCreate = () => {
+    resetForm();
     setModalOpen(true);
   };
 
@@ -233,20 +229,7 @@ const ToursManagement = () => {
   // Закрыть модалку
   const handleCloseModal = () => {
     setModalOpen(false);
-    setEditing(false);
-    setForm({
-      id: null,
-      title: "",
-      description: "",
-      price: "",
-      duration: "",
-      destination: "",
-      startDate: "",
-      endDate: "",
-      maxParticipants: "",
-      isActive: true,
-    });
-    setImages([]);
+    resetForm();
   };
 
   // Удаление тура
@@ -258,6 +241,8 @@ const ToursManagement = () => {
         try {
           await axios.delete(`${API_URL}/tours/${id}`);
           fetchTours();
+        } catch (error) {
+          console.error('Ошибка при удалении тура:', error);
         } finally {
           setConfirmModal({ show: false, message: "", onConfirm: null });
         }
@@ -265,40 +250,71 @@ const ToursManagement = () => {
     });
   };
 
+  const renderPagination = () => {
+    if (totalPages <= 1) return null;
+
+    return (
+      <div className="pagination">
+        <button
+          className="btn btn-secondary"
+          onClick={() => setPage(prev => Math.max(prev - 1, 1))}
+          disabled={page === 1}
+        >
+          Назад
+        </button>
+        
+        {Array.from({ length: totalPages }, (_, i) => (
+          <button
+            key={i}
+            className={`btn ${page === i + 1 ? 'btn-primary' : 'btn-secondary'}`}
+            onClick={() => setPage(i + 1)}
+          >
+            {i + 1}
+          </button>
+        ))}
+        
+        <button
+          className="btn btn-secondary"
+          onClick={() => setPage(prev => Math.min(prev + 1, totalPages))}
+          disabled={page === totalPages}
+        >
+          Далее
+        </button>
+      </div>
+    );
+  };
+
   return (
     <div className="tours-management">
-      {/* confirm modal */}
       <ConfirmModal
         show={confirmModal.show}
         message={confirmModal.message}
         onConfirm={confirmModal.onConfirm}
-        onCancel={() =>
-          setConfirmModal({ show: false, message: "", onConfirm: null })
-        }
+        onCancel={() => setConfirmModal({ show: false, message: "", onConfirm: null })}
       />
 
       <div className="header">
         <h2>Управление турами</h2>
-        <button className="btn btn-primary" onClick={handleOpenCreate}>
-          Добавить тур
-        </button>
-        <button className="btn btn-secondary" onClick={() => {
-          fetchDestinations();
-          setDestModal(true);
-        }}>
-          Управление направлениями
-        </button>
+        <div className="header-actions">
+          <button className="btn btn-primary" onClick={handleOpenCreate}>
+            Добавить тур
+          </button>
+          <button className="btn btn-secondary" onClick={() => {
+            fetchDestinations();
+            setDestModal(true);
+          }}>
+            Управление направлениями
+          </button>
+        </div>
       </div>
 
-
+      {/* Модалка создания/редактирования тура */}
       {modalOpen && (
         <div className="modal-overlay">
           <div className="modal">
             <div className="modal-header">
               <h3>{editing ? "Редактировать тур" : "Добавить тур"}</h3>
-              <button className="modal-close" onClick={handleCloseModal}>
-                ×
-              </button>
+              <button className="modal-close" onClick={handleCloseModal}>×</button>
             </div>
             <div className="modal-content">
               <form onSubmit={handleSubmit}>
@@ -353,13 +369,10 @@ const ToursManagement = () => {
                   >
                     <option value="">-- Выберите направление --</option>
                     {destinations.map(dest => (
-                      <option key={dest.id} value={dest.name}>
-                        {dest.name}
-                      </option>
+                      <option key={dest.id} value={dest.name}>{dest.name}</option>
                     ))}
                   </select>
                 </div>
-
                 <div className="form-group">
                   <label>Дата начала</label>
                   <input
@@ -418,18 +431,12 @@ const ToursManagement = () => {
                 {images.length > 0 && (
                   <div className="selected-images">
                     {[...images].map((img, i) => (
-                      <span key={i} className="image-name">
-                        {img.name}
-                      </span>
+                      <span key={i} className="image-name">{img.name}</span>
                     ))}
                   </div>
                 )}
                 <div className="modal-actions">
-                  <button
-                    type="button"
-                    className="btn btn-secondary"
-                    onClick={handleCloseModal}
-                  >
+                  <button type="button" className="btn btn-danger" onClick={handleCloseModal}>
                     Отмена
                   </button>
                   <button type="submit" className="btn btn-primary">
@@ -442,6 +449,7 @@ const ToursManagement = () => {
         </div>
       )}
 
+      {/* Модалка управления направлениями */}
       {destModal && (
         <div className="modal-overlay">
           <div className="modal">
@@ -456,14 +464,15 @@ const ToursManagement = () => {
                   placeholder="Новое направление"
                   value={newDest}
                   onChange={(e) => setNewDest(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleAddDest()}
                 />
                 <button className="btn btn-primary" onClick={handleAddDest}>
                   Добавить
                 </button>
               </div>
-              <ul>
+              <ul className="destinations-list">
                 {destinations.map(dest => (
-                  <li key={dest.id} style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
+                  <li key={dest.id}>
                     {dest.name}
                     <button
                       className="btn btn-danger btn-sm"
@@ -479,75 +488,58 @@ const ToursManagement = () => {
         </div>
       )}
 
+      {/* Список туров */}
       <div className="tours-list">
-        {tours.length === 0 && <p>Туров пока нет.</p>}
-        <div className="tours-grid">
-          {tours.map((tour) => (
-            <div key={tour.id} className="tour-card">
-              <h3>{tour.title}</h3>
-              <p className="tour-description">{tour.description}</p>
-              <div className="tour-details">
-                <p>Цена: {tour.price} ₽</p>
-                <p>Длительность: {tour.duration} дней</p>
-                <p>Направление: {tour.destination}</p>
-                <p>
-                  С {new Date(tour.startDate).toLocaleDateString()} до{" "}
-                  {new Date(tour.endDate).toLocaleDateString()}
-                </p>
-                <p>Макс. участников: {tour.maxParticipants}</p>
-                <p>Активен: {tour.isActive ? "Да" : "Нет"}</p>
-              </div>
-              {tour.images && (
-                <div className="tour-images">
-                  {tour.images.map((img, i) => (
-                    <img
-                      key={i}
-                      src={`http://localhost:5000${img}`}
-                      alt="Tour"
-                      className="tour-image"
-                    />
-                  ))}
+        {loading ? (
+          <div className="loading">Загрузка...</div>
+        ) : tours.length === 0 ? (
+          <p className="no-data">Туров пока нет.</p>
+        ) : (
+          <>
+            <div className="tours-grid">
+              {tours.map((tour) => (
+                <div key={tour.id} className="tour-card">
+                  <h3>{tour.title}</h3>
+                  <p className="tour-description">{tour.description}</p>
+                  <div className="tour-details">
+                    <p>Цена: {tour.price} ₽</p>
+                    <p>Длительность: {tour.duration} дней</p>
+                    <p>Направление: {tour.destination}</p>
+                    <p>С {new Date(tour.startDate).toLocaleDateString()} до {new Date(tour.endDate).toLocaleDateString()}</p>
+                    <p>Макс. участников: {tour.maxParticipants}</p>
+                    <p>Активен: {tour.isActive ? "Да" : "Нет"}</p>
+                  </div>
+                  {tour.images && tour.images.length > 0 && (
+                    <div className="tour-images">
+                      {tour.images.slice(0, 3).map((img, i) => (
+                        <img
+                          key={i}
+                          src={`http://localhost:5000${img}`}
+                          alt={`Тур ${tour.title}`}
+                          className="tour-image"
+                        />
+                      ))}
+                      {tour.images.length > 3 && (
+                        <span className="more-images">+{tour.images.length - 3}</span>
+                      )}
+                    </div>
+                  )}
+                  <div className="tour-actions">
+                    <button className="btn btn-primary" onClick={() => handleEdit(tour)}>
+                      Редактировать
+                    </button>
+                    <button className="btn btn-danger" onClick={() => handleDelete(tour.id)}>
+                      Удалить
+                    </button>
+                  </div>
                 </div>
-              )}
-              <div className="tour-actions">
-                <button
-                  className="btn btn-outline"
-                  onClick={() => handleEdit(tour)}
-                >
-                  Редактировать
-                </button>
-                <button
-                  className="btn btn-outline btn-danger"
-                  onClick={() => handleDelete(tour.id)}
-                >
-                  Удалить
-                </button>
-              </div>
+              ))}
             </div>
-          ))}
-        </div>
-        <div className="pagination">
-          <button
-            className="btn btn-secondary"
-            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-            disabled={page === 1}
-          >
-            Назад
-          </button>
-          <span>
-            Страница {page} из {totalPages}
-          </span>
-          <button
-            className="btn btn-secondary"
-            onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-            disabled={page === totalPages}
-          >
-            Далее
-          </button>
-        </div>
+            {renderPagination()}
+          </>
+        )}
       </div>
     </div>
-    
   );
 };
 
@@ -565,7 +557,6 @@ const BookingsManagement = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [confirmModal, setConfirmModal] = useState({ show: false, message: '', onConfirm: null });
-
 
   useEffect(() => {
     fetchBookings();
@@ -598,7 +589,10 @@ const BookingsManagement = () => {
       onConfirm: async () => {
         try {
           const token = localStorage.getItem("token");
-          await axios.put(`${API_URL}/bookings/${bookingId}/status`, { status: newStatus }, { headers: { Authorization: `Bearer ${token}` } });
+          await axios.put(`${API_URL}/bookings/${bookingId}/status`, 
+            { status: newStatus }, 
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
           fetchBookings();
         } catch (error) {
           console.error('Ошибка при обновлении статуса:', error);
@@ -609,13 +603,8 @@ const BookingsManagement = () => {
     });
   };
 
-  if (loading) {
-    return <div className="loading">Загрузка...</div>;
-  }
-
-  if (error) {
-    return <div className="error">{error}</div>;
-  }
+  if (loading) return <div className="loading">Загрузка...</div>;
+  if (error) return <div className="error">{error}</div>;
 
   return (
     <div className="bookings-management">
@@ -630,8 +619,8 @@ const BookingsManagement = () => {
         {bookings.map((booking) => (
           <div key={booking.id} className="booking-card">
             <h3>Бронирование #{booking.id}</h3>
-            <p>Тур: {booking.Tour.title}</p>
-            <p>Клиент: {booking.User.name}</p>
+            <p>Тур: {booking.Tour?.title || 'Неизвестно'}</p>
+            <p>Клиент: {booking.User?.name || 'Неизвестно'}</p>
             <p className={`status ${booking.status}`}>
               Статус: {getStatusText(booking.status)}
             </p>
@@ -664,7 +653,6 @@ const UsersManagement = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [confirmModal, setConfirmModal] = useState({ show: false, message: '', onConfirm: null });
-  
 
   useEffect(() => {
     fetchUsers();
@@ -697,7 +685,10 @@ const UsersManagement = () => {
       onConfirm: async () => {
         try {
           const token = localStorage.getItem('token');
-          await axios.put(`${API_URL}/users/${userId}/block`, { isBlocked: !currentStatus }, { headers: { Authorization: `Bearer ${token}` } });
+          await axios.put(`${API_URL}/users/${userId}/block`, 
+            { isBlocked: !currentStatus }, 
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
           fetchUsers();
         } catch (error) {
           console.error('Ошибка при блокировке:', error);
@@ -715,7 +706,10 @@ const UsersManagement = () => {
       onConfirm: async () => {
         try {
           const token = localStorage.getItem('token');
-          await axios.put(`${API_URL}/users/${userId}/role`, { role: newRole }, { headers: { Authorization: `Bearer ${token}` } });
+          await axios.put(`${API_URL}/users/${userId}/role`, 
+            { role: newRole }, 
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
           fetchUsers();
         } catch (error) {
           console.error('Ошибка при изменении роли:', error);
@@ -726,13 +720,8 @@ const UsersManagement = () => {
     });
   };
 
-  if (loading) {
-    return <div className="loading">Загрузка...</div>;
-  }
-
-  if (error) {
-    return <div className="error">{error}</div>;
-  }
+  if (loading) return <div className="loading">Загрузка...</div>;
+  if (error) return <div className="error">{error}</div>;
 
   return (
     <div className="users-management">
@@ -749,6 +738,7 @@ const UsersManagement = () => {
             <h3>{user.name}</h3>
             <p className="user-email">{user.email}</p>
             <p>Роль: {user.role}</p>
+            <p>Статус: {user.isBlocked ? 'Заблокирован' : 'Активен'}</p>
             <div className="user-actions">
               <button 
                 className="btn btn-primary"
@@ -776,19 +766,8 @@ const AdminDashboard = () => {
 
   const handleTabChange = (newValue) => {
     setValue(newValue);
-    switch (newValue) {
-      case 0:
-        navigate('/admin/tours');
-        break;
-      case 1:
-        navigate('/admin/bookings');
-        break;
-      case 2:
-        navigate('/admin/users');
-        break;
-      default:
-        break;
-    }
+    const routes = ['/admin/tours', '/admin/bookings', '/admin/users'];
+    navigate(routes[newValue] || routes[0]);
   };
 
   return (
@@ -801,24 +780,15 @@ const AdminDashboard = () => {
         <h1>Панель администратора</h1>
 
         <div className="tabs">
-          <button 
-            className={`tab ${value === 0 ? 'active' : ''}`}
-            onClick={() => handleTabChange(0)}
-          >
-            Туры
-          </button>
-          <button 
-            className={`tab ${value === 1 ? 'active' : ''}`}
-            onClick={() => handleTabChange(1)}
-          >
-            Бронирования
-          </button>
-          <button 
-            className={`tab ${value === 2 ? 'active' : ''}`}
-            onClick={() => handleTabChange(2)}
-          >
-            Пользователи
-          </button>
+          {['Туры', 'Бронирования', 'Пользователи'].map((tab, index) => (
+            <button
+              key={index}
+              className={`tab ${value === index ? 'active' : ''}`}
+              onClick={() => handleTabChange(index)}
+            >
+              {tab}
+            </button>
+          ))}
         </div>
 
         <div className="tab-content">

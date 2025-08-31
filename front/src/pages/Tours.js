@@ -96,7 +96,9 @@ const Tours = () => {
       {/* Панель поиска и сортировки */}
       <div className="search-container">
         <div className="search-input-wrapper">
+          <label htmlFor="search" className="sr-only">Поиск туров</label>
           <input
+            id="search"
             ref={inputRef}
             type="text"
             placeholder="Поиск туров..."
@@ -123,42 +125,46 @@ const Tours = () => {
           )}
         </div>
       </div>
-
+      
       {/* Список туров */}
+      <h2 className="section-title" id="tours-grid-heading">Список туров</h2>
       {loading ? (
         <div className="loader-container"><div className="spinner"></div></div>
       ) : (
         <>
           <div className="grid">
             {tours.length > 0 ? (
-              tours.map((tour, index) => (
-                <motion.div
-                  key={tour.id}
-                  className="grid-item"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                >
-                  <div className="card" onClick={() => navigate(`/tours/${tour.id}`)}>
-                    <img
-                      src={`http://localhost:5000${tour.images?.[0]}` || '/placeholder.jpg'}
-                      alt={tour.title}
-                      className="card-image"
-                    />
-                    <div className="card-content">
-                      <h3>{tour.title}</h3>
-                      <p className="description">
-                        {tour.description.length > 100
-                          ? tour.description.substring(0, 100) + '...'
-                          : tour.description}
-                      </p>
-                      <p className="price">{tour.price} ₽</p>
-                      <p className="duration">{tour.duration} дней</p>
-                      <button className="details-button">Подробнее</button>
+              tours.map((tour, index) => {
+                const imgSrc = tour?.images?.[0] ? `http://localhost:5000${tour.images[0]}` : '/placeholder.jpg';
+                const imgAlt = (tour.imageAlt && tour.imageAlt.trim()) ? tour.imageAlt.trim() : ""; // пустой alt = декоративное изображение
+
+                return (
+                  <motion.div
+                    key={tour.id}
+                    className="grid-item"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                  >
+                    <div className="card" onClick={() => navigate(`/tours/${tour.id}`)}>
+                      <img
+                        src={imgSrc}
+                        alt={imgAlt}
+                        className="card-image"
+                      />
+                      <div className="card-content">
+                        <h3>{tour.title}</h3>
+                        <p className="description">
+                          {tour.description.length > 100 ? tour.description.substring(0, 100) + '…' : tour.description}
+                        </p>
+                        <p className="price">{tour.price} ₽</p>
+                        <p className="duration">{tour.duration} дней</p>
+                        <button className="details-button" aria-label={`Подробнее о туре: ${tour.title}`}>Подробнее</button>
+                      </div>
                     </div>
-                  </div>
-                </motion.div>
-              ))
+                  </motion.div>
+                );
+              })
             ) : (
               <p className="no-tours">Туры не найдены</p>
             )}
